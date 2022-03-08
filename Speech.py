@@ -3,7 +3,7 @@
 """
 
 import sys
-sys.path.insert(0, '../../Utilities/')
+sys.path.insert(0, 'Utilities/')
 
 import tensorflow as tf
 import numpy as np
@@ -144,7 +144,7 @@ if __name__ == "__main__":
     N_f = 10000
     layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     
-    data = scipy.io.loadmat('../Data/burgers_shock.mat')
+    data = scipy.io.loadmat('Data/burgers_shock.mat')
     
     t = data['t'].flatten()[:,None]
     x = data['x'].flatten()[:,None]
@@ -277,7 +277,7 @@ if __name__ == "__main__":
     ax.set_ylim([-1.1,1.1])    
     ax.set_title('$t = 0.75$', fontsize = 10)
     
-    # savefig('./figures/Burgers')  
+    # savefig('figures/Burgers')  
     
 
 
