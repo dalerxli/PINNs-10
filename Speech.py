@@ -2,6 +2,10 @@
 @author: Maziar Raissi
 """
 
+# To submit batch GPU jobs
+#!/bin/bash
+#$ -l gpu=1
+
 import sys
 sys.path.insert(0, 'Utilities/')
 
