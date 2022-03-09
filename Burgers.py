@@ -201,12 +201,12 @@ if __name__ == "__main__":
     start_time = time.time()                
     model.train()
     elapsed = time.time() - start_time                
-    #print('Training time: %.4f' % (elapsed))
+    print('Training time: %.4f' % (elapsed))
     
     u_pred, f_pred = model.predict(X_star)
             
     error_u = np.linalg.norm(u_star-u_pred,2)/np.linalg.norm(u_star,2)
-    #print('Error u: %e' % (error_u))                     
+    print('Error u: %e' % (error_u))                     
 
     
     U_pred = griddata(X_star, u_pred.flatten(), (X, T), method='cubic')
