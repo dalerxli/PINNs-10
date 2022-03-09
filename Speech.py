@@ -22,8 +22,8 @@ import time
 import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-np.random.seed(1234)
-tf.set_random_seed(1234)
+np.random.seed(320000)
+tf.set_random_seed(320000)
 
 class PhysicsInformedNN:
     # Initialize the class
@@ -141,8 +141,7 @@ class PhysicsInformedNN:
         return u_star, f_star
     
 if __name__ == "__main__": 
-    read('aa_DR1_MCPM0_sa1.wav')
-    #read('a_p1.wav')
+    
     nu = 0.01/np.pi
     noise = 0.0
     fs = 16000  # Sampling freqency        
@@ -151,8 +150,8 @@ if __name__ == "__main__":
     N_f = 10000
     layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     
-    data = scipy.io.loadmat('Data/burgers_shock.mat')
-    
+    data = read('aa_DR1_MCPM0_sa1.wav')
+    #data = read('a_p1.wav')
     t = data['t'].flatten()[:,None]
     x = data['x'].flatten()[:,None]
     Exact = np.real(data['usol']).T
@@ -218,6 +217,6 @@ if __name__ == "__main__":
     print("Error")
     print(Error)
 
-    write('a.wav', fs, data.astype(np.int16))
+    write('a.wav', fs, wave.astype(np.int16))
 
 
