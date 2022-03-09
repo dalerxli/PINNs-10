@@ -1,6 +1,5 @@
 """
 @author: Maziar Raissi
-Ayumu Oaku aoaku1@sheffield.ac.uk
 """
 # To submit batch GPU jobs
 #!/bin/bash
