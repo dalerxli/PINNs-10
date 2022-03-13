@@ -11,10 +11,8 @@ sys.path.insert(0, 'Utilities/')
 import tensorflow as tf
 import numpy as np
 import scipy.io
-from scipy.interpolate import griddata
 from pyDOE import lhs
 import time
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 np.random.seed(1234)
 tf.set_random_seed(1234)
