@@ -1,26 +1,23 @@
 """
 @author: Maziar Raissi
 Ayumu Oaku aoaku1@sheffield.ac.uk
+
+Job script
+module load apps/python/conda
+module load libs/cudnn/7.5.0.56/binary-cuda-10.0.130
+source activate tensorflow-gpu
 """
 # To submit batch GPU jobs
 #!/bin/bash
 #$ -l gpu=1
 
-import sys
-sys.path.insert(0, 'Utilities/')
-
 import tensorflow as tf
 import numpy as np
-import matplotlib.pyplot as plt
+import time
+import soundfile as sf
 import scipy.io
-from scipy.io.wavfile import read,write
 from scipy.interpolate import griddata
 from pyDOE import lhs
-from plotting import newfig, savefig
-from mpl_toolkits.mplot3d import Axes3D
-import time
-import matplotlib.gridspec as gridspec
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 np.random.seed(320000)
 tf.set_random_seed(320000)
@@ -150,9 +147,12 @@ if __name__ == "__main__":
     N_f = 10000
     layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     
-    data = read('aa_DR1_MCPM0_sa1.wav')
-    #data = read('a_p1.wav')
-    t = data['t'].flatten()[:,None]
+    # Load wav files
+    data, samplerate = sf.read("train.wav")
+    gold_standard = sf.read('aa_DR1_MCPM0_sa1.wav')
+
+    #data = scipy.io.loadmat('../Data/burgers_shock.mat')
+    t = 0.5 # seconds
     x = data['x'].flatten()[:,None]
     Exact = np.real(data['usol']).T
     
@@ -166,7 +166,7 @@ if __name__ == "__main__":
     # Doman bounds
     lb = X_star.min(0)
     ub = X_star.max(0)    
-        
+
     xx1 = np.hstack((X[0:1,:].T, T[0:1,:].T))
     uu1 = Exact[0:1,:].T
     xx2 = np.hstack((X[:,0:1], T[:,0:1]))
@@ -202,7 +202,7 @@ if __name__ == "__main__":
     model = PhysicsInformedNN(X_u_train, u_train, X_f_train, layers, lb, ub, nu)
     
     start_time = time.time()                
-    model.train()
+    result = model.train()
     elapsed = time.time() - start_time                
     print('Training time: %.4f' % (elapsed))
     
@@ -216,7 +216,8 @@ if __name__ == "__main__":
     Error = np.abs(Exact - U_pred)
     print("Error")
     print(Error)
-
-    write('a.wav', fs, wave.astype(np.int16))
+    
+    # Export result as wav file
+    sf.write("a.wav", model, fs, format="WAV", subtype ="PCM_16" )
 
 
