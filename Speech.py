@@ -148,10 +148,12 @@ if __name__ == "__main__":
     layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     
     # Load wav files
-    data, samplerate = sf.read("train.wav")
-    gold_standard = sf.read('aa_DR1_MCPM0_sa1.wav')
-
-    #data = scipy.io.loadmat('../Data/burgers_shock.mat')
+    data, samplerate = sf.read("../Data/train.wav")
+    print("samplerate")
+    print (samplerate)
+    gold_standard, samplerate = sf.read('../Data/aa_DR1_MCPM0_sa1.wav')
+    print(samplerate)
+    data = scipy.io.loadmat('../Data/burgers_shock.mat')
     t = 0.5 # seconds
     x = data['x'].flatten()[:,None]
     Exact = np.real(data['usol']).T

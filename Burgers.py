@@ -5,14 +5,12 @@
 #!/bin/bash
 #$ -l gpu=1
 
-import sys
-sys.path.insert(0, 'Utilities/')
-
 import tensorflow as tf
 import numpy as np
-import scipy.io
-from pyDOE import lhs
 import time
+import scipy.io
+from scipy.interpolate import griddata
+from pyDOE import lhs
 
 np.random.seed(1234)
 tf.set_random_seed(1234)
@@ -152,7 +150,9 @@ if __name__ == "__main__":
     #The number of experiments needs to be reduced.
     #I want to prevent factors other than the one I want to study from being included (orthogonality).
     X_star = np.hstack((X.flatten()[:,None], T.flatten()[:,None]))
-    u_star = Exact.flatten()[:,None]              
+    np.set_printoptions(threshold=np.inf) 
+    print(X_star)
+    u_star = Exact.flatten()[:,None] 
 
     # Doman bounds
     lb = X_star.min(0)
