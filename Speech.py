@@ -150,12 +150,12 @@ if __name__ == "__main__":
     layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     
     # Load wav files
-    data, samplerate = read("../Data/train.wav")
+    data, samplerate = read("Data/train.wav")
     print("samplerate")
     print (samplerate)
-    gold_standard, samplerate = read('../Data/aa_DR1_MCPM0_sa1.wav')
+    gold_standard, samplerate = read('Data/aa_DR1_MCPM0_sa1.wav')
     print(samplerate)
-    data = scipy.io.loadmat('../Data/burgers_shock.mat')
+    data = scipy.io.loadmat('Data/burgers_shock.mat')
     t = 0.5 # seconds
     x = data['x'].flatten()[:,None]
     #usol = u(t,x) solution?
