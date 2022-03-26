@@ -3,6 +3,7 @@
 Ayumu Oaku aoaku1@sheffield.ac.uk
 
 Job script
+qrshx -l gpu=1
 module load apps/python/conda
 module load libs/cudnn/7.5.0.56/binary-cuda-10.0.130
 source activate tensorflow-gpu
@@ -14,8 +15,8 @@ source activate tensorflow-gpu
 import tensorflow as tf
 import numpy as np
 import time
-import soundfile as sf
 import scipy.io
+from scipy.io.wavfile import read, write
 from scipy.interpolate import griddata
 from pyDOE import lhs
 
@@ -112,6 +113,7 @@ class PhysicsInformedNN:
         u_t = tf.gradients(u, t)[0]
         u_x = tf.gradients(u, x)[0]
         u_xx = tf.gradients(u_x, x)[0]
+        #Burgers equation
         f = u_t + u*u_x - self.nu*u_xx
         
         return f
@@ -148,14 +150,15 @@ if __name__ == "__main__":
     layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     
     # Load wav files
-    data, samplerate = sf.read("../Data/train.wav")
+    data, samplerate = read("../Data/train.wav")
     print("samplerate")
     print (samplerate)
-    gold_standard, samplerate = sf.read('../Data/aa_DR1_MCPM0_sa1.wav')
+    gold_standard, samplerate = read('../Data/aa_DR1_MCPM0_sa1.wav')
     print(samplerate)
     data = scipy.io.loadmat('../Data/burgers_shock.mat')
     t = 0.5 # seconds
     x = data['x'].flatten()[:,None]
+    #usol = u(t,x) solution?
     Exact = np.real(data['usol']).T
     
     X, T = np.meshgrid(x,t)
@@ -220,6 +223,6 @@ if __name__ == "__main__":
     print(Error)
     
     # Export result as wav file
-    sf.write("a.wav", model, fs, format="WAV", subtype ="PCM_16" )
+    write("a.wav", model, fs, format="WAV", subtype ="PCM_16" )
 
 

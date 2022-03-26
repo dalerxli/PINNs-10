@@ -23,7 +23,8 @@ write("Data/train.wav", fs, wave.astype(np.int16))
 # Save samples as x to MATLIB 
 x = np.linspace(0, 8000, num=256, dtype=int)
 t = np.linspace(0.01, 0.99, num = 100) 
-scipy.io.savemat('Data/periodic.mat', mdict={'x':x, 't':t}, oned_as='column')
+usol = np.linspace(1, 1000, num =256, dtype=int)
+scipy.io.savemat('Data/periodic.mat', mdict={'x':x, 't':t, 'usol':usol}, oned_as='column')
 scipy.io.savemat('Data/vowel.mat', mdict={'x':x,'t':t}, oned_as='column')
 
 

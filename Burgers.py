@@ -150,7 +150,6 @@ if __name__ == "__main__":
     #The number of experiments needs to be reduced.
     #I want to prevent factors other than the one I want to study from being included (orthogonality).
     X_star = np.hstack((X.flatten()[:,None], T.flatten()[:,None]))
-    np.set_printoptions(threshold=np.inf) 
     print(X_star)
     u_star = Exact.flatten()[:,None] 
 
