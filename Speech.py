@@ -155,7 +155,7 @@ if __name__ == "__main__":
     print (samplerate)
     gold_standard, samplerate = read('Data/aa_DR1_MCPM0_sa1.wav')
     print(samplerate)
-    data = scipy.io.loadmat('Data/burgers_shock.mat')
+    data = scipy.io.loadmat('Data/periodic.mat')
     t = 0.5 # seconds
     x = data['x'].flatten()[:,None]
     #usol = u(t,x) solution?
@@ -209,20 +209,18 @@ if __name__ == "__main__":
     start_time = time.time()                
     result = model.train()
     elapsed = time.time() - start_time                
-    print('Training time: %.4f' % (elapsed))
+    #print('Training time: %.4f' % (elapsed))
     
     u_pred, f_pred = model.predict(X_star)
             
     error_u = np.linalg.norm(u_star-u_pred,2)/np.linalg.norm(u_star,2)
-    print('Error u: %e' % (error_u))                     
+    #print('Error u: %e' % (error_u))                     
 
     
-    U_pred = griddata(X_star, u_pred.flatten(), (X, T), method='cubic')
-    Error = np.abs(Exact - U_pred)
-    print("Error")
-    print(Error)
+    #U_pred = griddata(X_star, u_pred.flatten(), (X, T), method='cubic')
+    #Error = np.abs(Exact - U_pred)
     
     # Export result as wav file
-    write("a.wav", model, fs, format="WAV", subtype ="PCM_16" )
-
+    #write("a.wav", fs, model.astype(np.int16))
+    print(model)
 
