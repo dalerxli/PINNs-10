@@ -20,8 +20,8 @@ from scipy.io.wavfile import read, write
 from scipy.interpolate import griddata
 from pyDOE import lhs
 
-np.random.seed(320000)
-tf.set_random_seed(320000)
+np.random.seed(1234)
+tf.set_random_seed(1234)
 
 class PhysicsInformedNN:
     # Initialize the class
@@ -113,9 +113,8 @@ class PhysicsInformedNN:
         u_t = tf.gradients(u, t)[0]
         u_x = tf.gradients(u, x)[0]
         u_xx = tf.gradients(u_x, x)[0]
-        #Burgers equation
-        f = u_t + u*u_x - self.nu*u_xx
-        
+        # Burgers equation
+        f = u_t + u*u_x - (0.01/np.pi)*u_xx
         return f
     
     def callback(self, loss):
@@ -165,13 +164,13 @@ if __name__ == "__main__":
     xx1 = np.hstack((X[0:1,:].T, T[0:1,:].T))
     xx2 = np.hstack((X[:,0:1], T[:,0:1]))
     xx3 = np.hstack((X[:,-1:], T[:,-1:]))
-    #input values, x and u in func u(x,t)
+    # Input values, x and u in func u(x,t)
     X_u_train = np.vstack([xx1, xx2, xx3])
     
     uu1 = Exact[0:1,:].T
     uu2 = Exact[:,0:1]
     uu3 = Exact[:,-1:]
-    #training data of function u(x,t)
+    # Training data of function u(x,t)
     u_train = np.vstack([uu1, uu2, uu3])
 
     # Extract the num of Nu with data of Initial condition
@@ -195,13 +194,8 @@ if __name__ == "__main__":
     print('Training time: %.4f' % (elapsed))
     
     u_pred, f_pred = model.predict(X_star)
-    print("u_pred:")
-    print(u_pred)
-    print("f_pred")
-    print(f_pred)
     # Export result as wav file
     #write("a.wav", fs, model.astype(np.int16))
-
 
 
     #-------------------------------------------------------------------------
@@ -210,4 +204,3 @@ if __name__ == "__main__":
     
     #U_pred = griddata(X_star, u_pred.flatten(), (X, T), method='cubic')
     #Error = np.abs(Exact - U_pred)
-
