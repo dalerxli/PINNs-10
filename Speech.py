@@ -141,86 +141,73 @@ class PhysicsInformedNN:
     
 if __name__ == "__main__": 
     
-    nu = 0.01/np.pi
-    noise = 0.0
-    fs = 16000  # Sampling freqency        
-
-    N_u = 100
-    N_f = 10000
+    # Setting
+    N_u = 100   # Initial and boundary condition with the num of learning data
+    N_f = 10000 # Collocation points
+    fs = 16000  # Sampling freqency
+    t = 0.5 # seconds  
     layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     
     # Load wav files
     data, samplerate = read("Data/train.wav")
-    print("samplerate")
-    print (samplerate)
     gold_standard, samplerate = read('Data/aa_DR1_MCPM0_sa1.wav')
-    print(samplerate)
     data = scipy.io.loadmat('Data/periodic.mat')
-    t = 0.5 # seconds
-    x = data['x'].flatten()[:,None]
-    #usol = u(t,x) solution?
-    Exact = np.real(data['usol']).T
     
+    # Initial condition
+    t = data['t'].flatten()[:,None]
+    x = data['x'].flatten()[:,None]
     X, T = np.meshgrid(x,t)
-    #why use lhs/ and random values
-    #The number of experiments needs to be reduced.
-    #I want to prevent factors other than the one I want to study from being included (orthogonality).
     X_star = np.hstack((X.flatten()[:,None], T.flatten()[:,None]))
+
+    Exact = np.real(data['usol']).T # usol = u(t,x) solution?
     u_star = Exact.flatten()[:,None]              
 
-    # Doman bounds
-    lb = X_star.min(0)
-    ub = X_star.max(0)    
-
     xx1 = np.hstack((X[0:1,:].T, T[0:1,:].T))
-    uu1 = Exact[0:1,:].T
     xx2 = np.hstack((X[:,0:1], T[:,0:1]))
-    uu2 = Exact[:,0:1]
     xx3 = np.hstack((X[:,-1:], T[:,-1:]))
-    uu3 = Exact[:,-1:]
-    
-    #[x_value, t_value]
-    #usually take data with boundary condition
-
     #input values, x and u in func u(x,t)
     X_u_train = np.vstack([xx1, xx2, xx3])
     
-    
-    #what is X_f_train and lhs why use them? why chooose 100000 points
-    #how do we get these values x nad t
-    X_f_train = lb + (ub-lb)*lhs(2, N_f)
-    X_f_train = np.vstack((X_f_train, X_u_train))
+    uu1 = Exact[0:1,:].T
+    uu2 = Exact[:,0:1]
+    uu3 = Exact[:,-1:]
     #training data of function u(x,t)
     u_train = np.vstack([uu1, uu2, uu3])
-    
-    #idx =index/ random.cho
+
+    # Extract the num of Nu with data of Initial condition
     idx = np.random.choice(X_u_train.shape[0], N_u, replace=False)
     X_u_train = X_u_train[idx, :]
     u_train = u_train[idx,:]
-        
-    #define X_u_train, u_train
-    # change X_u_train, u_train and so 
-    # replace from x to gausian e.x 100 sample
-    # to get audio file  in sequence
-    #figure out get rid of samples how to draw sample from sine wave and cosine wave
-    #
-    model = PhysicsInformedNN(X_u_train, u_train, X_f_train, layers, lb, ub, nu)
+    
+    # Doman bounds
+    lb = X_star.min(0)
+    ub = X_star.max(0)  
+    # Generate collocation points
+    X_f_train = lb + (ub-lb)*lhs(2, N_f)
+    X_f_train = np.vstack((X_f_train, X_u_train))
+
+    # Give data to PhysicsInformedNN class
+    model = PhysicsInformedNN(X_u_train, u_train, X_f_train, layers, lb, ub)
     
     start_time = time.time()                
     result = model.train()
     elapsed = time.time() - start_time                
-    #print('Training time: %.4f' % (elapsed))
+    print('Training time: %.4f' % (elapsed))
     
     u_pred, f_pred = model.predict(X_star)
-            
-    error_u = np.linalg.norm(u_star-u_pred,2)/np.linalg.norm(u_star,2)
-    #print('Error u: %e' % (error_u))                     
+    print("u_pred:")
+    print(u_pred)
+    print("f_pred")
+    print(f_pred)
+    # Export result as wav file
+    #write("a.wav", fs, model.astype(np.int16))
 
+
+
+    #-------------------------------------------------------------------------
+    #error_u = np.linalg.norm(u_star-u_pred,2)/np.linalg.norm(u_star,2)
+    #print('Error u: %e' % (error_u))                     
     
     #U_pred = griddata(X_star, u_pred.flatten(), (X, T), method='cubic')
     #Error = np.abs(Exact - U_pred)
-    
-    # Export result as wav file
-    #write("a.wav", fs, model.astype(np.int16))
-    print(model)
 
