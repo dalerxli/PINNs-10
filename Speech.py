@@ -148,9 +148,7 @@ if __name__ == "__main__":
     layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     
     # Load wav files
-    data, samplerate = read("Data/train.wav")
-    gold_standard, samplerate = read('Data/aa_DR1_MCPM0_sa1.wav')
-    data = scipy.io.loadmat('Data/periodic.mat')
+    data = scipy.io.loadmat('Data/sound.mat')
     
     # Initial condition
     t = data['t'].flatten()[:,None]
@@ -158,7 +156,7 @@ if __name__ == "__main__":
     X, T = np.meshgrid(x,t)
     X_star = np.hstack((X.flatten()[:,None], T.flatten()[:,None]))
 
-    Exact = np.real(data['usol']).T # usol = u(t,x) solution?
+    Exact = np.real(data['usol']).T
     u_star = Exact.flatten()[:,None]              
 
     xx1 = np.hstack((X[0:1,:].T, T[0:1,:].T))
@@ -167,11 +165,12 @@ if __name__ == "__main__":
     # Input values, x and u in func u(x,t)
     X_u_train = np.vstack([xx1, xx2, xx3])
     
+    
     uu1 = Exact[0:1,:].T
     uu2 = Exact[:,0:1]
     uu3 = Exact[:,-1:]
-    # Training data of function u(x,t)
-    u_train = np.vstack([uu1, uu2, uu3])
+    #u_train = np.vstack([uu1, uu2, uu3])
+    u_train = Exact
 
     # Extract the num of Nu with data of Initial condition
     idx = np.random.choice(X_u_train.shape[0], N_u, replace=False)
@@ -195,7 +194,7 @@ if __name__ == "__main__":
     
     u_pred, f_pred = model.predict(X_star)
     # Export result as wav file
-    #write("a.wav", fs, model.astype(np.int16))
+    write("a.wav", u_pred, model.astype(np.int16))
 
 
     #-------------------------------------------------------------------------
