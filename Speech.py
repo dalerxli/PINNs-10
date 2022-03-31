@@ -192,9 +192,7 @@ if __name__ == "__main__":
     
     u_pred, f_pred = model.predict(X_star)
     # Export result as wav file
-    print(u_pred)
     write("Data/a.wav", fs, u_pred.astype(np.int16))
-
 
     #-------------------------------------------------------------------------
     #error_u = np.linalg.norm(u_star-u_pred,2)/np.linalg.norm(u_star,2)
