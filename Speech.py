@@ -25,7 +25,7 @@ tf.set_random_seed(1234)
 
 class PhysicsInformedNN:
     # Initialize the class
-    def __init__(self, X_u, u, X_f, layers, lb, ub, nu):
+    def __init__(self, X_u, u, X_f, layers, lb, ub):
         
         self.lb = lb
         self.ub = ub
@@ -40,7 +40,6 @@ class PhysicsInformedNN:
         self.u = u
         
         self.layers = layers
-        self.nu = nu
         
         # Initialize NNs
         self.weights, self.biases = self.initialize_NN(layers)
@@ -141,13 +140,14 @@ class PhysicsInformedNN:
 if __name__ == "__main__": 
     
     # Setting
-    N_u = 100   # Initial and boundary condition with the num of learning data
+    N_u = 10   # Initial and boundary condition with the num of learning data
     N_f = 10000 # Collocation points
     fs = 16000  # Sampling freqency
-    t = 0.5 # seconds  
+ 
     layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     
     # Load wav files
+    #data = scipy.io.loadmat('Data/burgers_shock.mat')
     data = scipy.io.loadmat('Data/sound.mat')
     
     # Initial condition
@@ -165,12 +165,10 @@ if __name__ == "__main__":
     # Input values, x and u in func u(x,t)
     X_u_train = np.vstack([xx1, xx2, xx3])
     
-    
     uu1 = Exact[0:1,:].T
     uu2 = Exact[:,0:1]
     uu3 = Exact[:,-1:]
-    #u_train = np.vstack([uu1, uu2, uu3])
-    u_train = Exact
+    u_train = np.vstack([uu1, uu2, uu3])
 
     # Extract the num of Nu with data of Initial condition
     idx = np.random.choice(X_u_train.shape[0], N_u, replace=False)
@@ -194,7 +192,8 @@ if __name__ == "__main__":
     
     u_pred, f_pred = model.predict(X_star)
     # Export result as wav file
-    write("a.wav", u_pred, model.astype(np.int16))
+    print(u_pred)
+    write("Data/a.wav", fs, u_pred.astype(np.int16))
 
 
     #-------------------------------------------------------------------------
