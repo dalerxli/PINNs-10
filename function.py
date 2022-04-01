@@ -18,12 +18,12 @@ wave =0
 for i in formant:
     wave += get_sine_wave(i)
 
-write("Data/train.wav", fs, wave.astype(np.int16))
+write("Data/train.wav", fs, wave.astype(np.float32))
 
-fs, gold = read("Data/aa_DR1_MCPM0_sa1.wav")
+fs, gold = read("Data/aa_DR1_MCPM0_sa1_float.wav")
 gold = gold.reshape(157,10)
 
-x = np.linspace(-32768, 32767, num=157, dtype=int)
+x = np.linspace(-1, 1, num=157, dtype=float)
 t = np.linspace(0, 0.98, num=10, dtype=float)
 
 # Save samples as x to MATLIB 
