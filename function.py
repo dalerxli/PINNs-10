@@ -22,8 +22,9 @@ write("Data/train.wav", fs, wave.astype(np.int16))
 
 fs, gold = read("Data/aa_DR1_MCPM0_sa1.wav")
 gold = gold.reshape(157,10)
+#gold = wave.reshape(80,100)
 
-x = np.linspace(-32768, 32767, num=157, dtype=int)
+x = np.linspace(-32768, 32767, num=157, dtype=int) # PCM16bit
 t = np.linspace(0, 0.98, num=10, dtype=float)
 
 # Save samples as x to MATLIB 
