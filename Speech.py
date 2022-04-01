@@ -140,15 +140,14 @@ class PhysicsInformedNN:
 if __name__ == "__main__": 
     
     # Setting
-    N_u = 157   # Initial and boundary condition with the num of learning data
+    N_u = 10   # Initial and boundary condition with the num of learning data
     N_f = 10000 # Collocation points
     fs = 16000  # Sampling freqency
 
     layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     
     # Load wav files
-    #data = scipy.io.loadmat('Data/burgers_shock.mat')
-    data = scipy.io.loadmat('Data/sound.mat')
+    data = scipy.io.loadmat('Data/MATLAB/vowel.mat')
     
     # Initial condition
     t = data['t'].flatten()[:,None]
@@ -192,7 +191,7 @@ if __name__ == "__main__":
     
     u_pred, f_pred = model.predict(X_star)
     # Export result as wav file
-    write("Data/a.wav", fs, u_pred.astype(np.int16))
+    write("Data/result.wav", fs, u_pred.astype(np.float32))
 
     #-------------------------------------------------------------------------
     #error_u = np.linalg.norm(u_star-u_pred,2)/np.linalg.norm(u_star,2)
