@@ -140,7 +140,7 @@ class PhysicsInformedNN:
 if __name__ == "__main__": 
     
     # Setting
-    N_u = 10   # Initial and boundary condition with the num of learning data
+    N_u = 157   # Initial and boundary condition with the num of learning data
     N_f = 10000 # Collocation points
     fs = 16000  # Sampling freqency
 
