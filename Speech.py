@@ -143,7 +143,7 @@ if __name__ == "__main__":
     N_u = 10   # Initial and boundary condition with the num of learning data
     N_f = 10000 # Collocation points
     fs = 16000  # Sampling freqency
- 
+
     layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     
     # Load wav files
