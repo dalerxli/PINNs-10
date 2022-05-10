@@ -19,30 +19,21 @@ def periodic():
     wave = 0
     for i in formant:
         wave += get_sine_wave(i)
-    write("Data/train.wav", fs, wave.astype(np.float32))
-    gold = read("Data/train.wav")
+    write("Data/formant.wav", fs, wave.astype(np.float32))
+    gold = read("Data/formant.wav")
     gold = wave.reshape(80,100)
 
     x = np.linspace(-1, 1, num=80, dtype=float)
     t = np.linspace(0, 0.98, num=100, dtype=float)
-    scipy.io.savemat('Data/MATLAB/periodic.mat', mdict={'x':x, 't':t, 'usol': gold}, oned_as='column')
+    scipy.io.savemat('Data/MATLAB/formant.mat', mdict={'x':x, 't':t, 'usol': gold}, oned_as='column')
 
 def vowel():
     fs, gold = read("Data/aa_DR1_MCPM0_sa1_float.wav")
-    gold = gold.reshape(157,10)
+    gold = gold.reshape(10,157)
 
-    x = np.linspace(-1, 1, num=157, dtype=float)
-    t = np.linspace(0, 0.98, num=10, dtype=float)
+    x = np.linspace(-1, 1, num=10, dtype=float)
+    t = np.linspace(0, 0.98, num=157, dtype=float)
     scipy.io.savemat('Data/MATLAB/vowel.mat', mdict={'x':x, 't':t, 'usol': gold}, oned_as='column')
 
-def pulse():
-    fs, gold = read("Data/test.wav")
-    gold = gold.reshape(80,100)
-
-    x = np.linspace(-1, 1, num=80, dtype=float)
-    t = np.linspace(0, 0.98, num=100, dtype=float)
-    scipy.io.savemat('Data/MATLAB/pulse.mat', mdict={'x':x, 't':t, 'usol': gold}, oned_as='column')
-
-#periodic()
+periodic()
 vowel()
-#pulse()
